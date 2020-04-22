@@ -1,9 +1,12 @@
 <template>
-    <Reaction :icon-files="iconFiles"/>
+    <Reaction
+            :counter-prop="counter"
+            :icon-files="iconFiles"
+    />
 </template>
 
 <script>
-    import Reaction from "@/components/UploadsBar/Post/Reaction/index";
+    import Reaction from "@/components/UploadsBar/PostWrapper/Post/Reaction/index";
 
     export default {
         name: "BookmarkReaction",
@@ -15,6 +18,7 @@
                     inactive: "bookmark-regular.svg"
                 }
             }
-        }
+        },
+        props: ['counter']
     }
 </script>

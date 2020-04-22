@@ -11,7 +11,7 @@
 </template>
 
 <script>
-    import ChosenTag from "@/components/Sidebar/ChosenTagWrapper/ChosenTag";
+    import ChosenTag from "@/components/SidebarWrapper/FilterSidebar/ChosenTagWrapper/ChosenTag";
 
     export default {
         components: {ChosenTag},
@@ -38,4 +38,6 @@
 <style lang="sass" scoped>
     .chosen-tags-wrapper
         color: black
+        margin-top: 10px
+        margin-bottom: 7px
 </style>

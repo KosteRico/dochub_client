@@ -1,5 +1,5 @@
 <template>
-    <div class="icon" :style="{background : image }"></div>
+    <a @click="$emit('click')" class="icon" :style="{background : image }"></a>
 </template>
 
 <script>
@@ -26,6 +26,7 @@
 
 <style lang="sass" scoped>
     .icon
+        display: block
         height: 23px
         width: 23px
         margin: 3px

@@ -10,7 +10,8 @@
 
     export default {
         props: {
-            iconFiles: Object
+            iconFiles: Object,
+            counterProp: Number
         },
         methods: {
             updateReaction() {
@@ -22,7 +23,7 @@
         data() {
             return {
                 isChecked: false,
-                counter: 0
+                counter: this.counterProp
             }
         },
         computed: {
@@ -34,18 +35,18 @@
 </script>
 
 <style lang="sass" scoped>
-    .reaction
-        padding: 4px 10px
-        border-radius: 15px
-        cursor: pointer
-        color: inherit
-        display: flex
-        flex-direction: row
+.reaction
+    padding: 4px 10px
+    border-radius: 15px
+    cursor: pointer
+    color: inherit
+    display: flex
+    flex-direction: row
 
-        .counter
-            margin-left: 8px
-            align-self: center
+    .counter
+        margin-left: 8px
+        align-self: center
 
-            &.bold
-                font-weight: bold
+        &.bold
+            font-weight: bold
 </style>

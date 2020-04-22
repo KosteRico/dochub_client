@@ -3,11 +3,13 @@
         <div class="container">
             <div class="nav-container">
                 <div class="logo">
-                    <h3>Logo</h3>
+                    <router-link to="/">
+                        <h3>Logo</h3>
+                    </router-link>
                 </div>
                 <div class="search-box-wrapper flex-align-center">
                     <input type="search" class="search-box" placeholder="Search...">
-                    <Icon image-file="bell-solid.svg"/>
+                    <Icon @click="createPost" image-file="plus-solid.svg"/>
                 </div>
                 <div class="login-wrapper flex-align-center">
                     <Icon image-file="user-solid.svg"/>
@@ -23,65 +25,74 @@
 
     export default {
         name: "TheNavigationBar",
-        components: {Icon}
+        components: {Icon},
+        methods: {
+            createPost() {
+                console.log('clicked')
+                this.$modal.show('mod1')
+            }
+        }
     }
 </script>
 
 <style lang="sass" scoped>
-    @import "../assets/sass/variables"
+@import "../assets/sass/variables"
 
-    .logo
-        margin-right: 1em
-        width: $side-width
-        position: relative
+.logo
+    width: $side-width
+    position: relative
 
-        h3
-            margin: 0
-            position: absolute
-            width: fit-content
-            cursor: pointer
-            left: 0
-            bottom: 0
+    a
+        color: inherit
+
+    h3
+        margin: 0
+        position: absolute
+        width: fit-content
+        cursor: pointer
+        left: 0
+        bottom: 0
 
 
-    nav
-        /*border-bottom: 1px solid #6796cd*/
-        position: fixed
-        top: 0
-        height: 48px
-        color: red
-        width: 100%
-        background-color: #77baf8
-        box-shadow: 0 .3px 4px 0 rgba(119, 186, 248, 1)
+nav
+    /*border-bottom: 1px solid #6796cd*/
+    position: fixed
+    top: 0
+    height: 48px
+    color: red
+    width: 100%
+    background-color: #77baf8
+    box-shadow: 0 .3px 4px 0 rgba(119, 186, 248, 1)
 
-        .nav-container
-            height: inherit
-            display: flex
-            justify-content: flex-start
-            flex-direction: row
+    .nav-container
+        height: inherit
+        display: flex
+        justify-content: flex-start
+        flex-direction: row
 
-        .container
-            height: inherit
+    .container
+        height: inherit
 
-        .nav-link
-            cursor: pointer
+    .nav-link
+        cursor: pointer
 
-        .search-box
-            width: 290px
-            max-height: 29px
-            margin-left: 0 !important
+    .search-box
+        width: 290px
+        max-height: 29px
+        margin-left: 0 !important
 
-        .login-wrapper
-            padding-left: 8px
+    .login-wrapper
+        padding-left: 8px
 
-        .icon
-            cursor: pointer
+    .icon
+        cursor: pointer
 
-        .search-box-wrapper
-            display: flex
-            flex-grow: 1
+    .search-box-wrapper
+        display: flex
+        flex-grow: 1
+        margin-left: 1em
 
-            *
-                margin-left: 25px
+        *
+            margin-left: 25px
 
 </style>

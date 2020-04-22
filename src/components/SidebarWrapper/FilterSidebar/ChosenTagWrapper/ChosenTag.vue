@@ -23,7 +23,7 @@
 
 <style lang="sass" scoped>
 
-    @import "../../../assets/sass/variables"
+    @import "../../../../assets/sass/variables"
 
     .remove
         color: #222
