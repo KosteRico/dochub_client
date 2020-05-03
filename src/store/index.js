@@ -9,29 +9,20 @@ export default new Vuex.Store({
     state: {
         accessToken: localStorage.getItem("accessToken") || sessionStorage.getItem("accessToken") || '',
         refreshToken: localStorage.getItem("refreshToken") || sessionStorage.getItem("refreshToken") || '',
-        username: localStorage.getItem("username") || sessionStorage.getItem("username") || '',
-        alertInfo: {
-            text: "",
-            variant: "",
-            visible: false
-        }
     },
     getters: {
         isLoggedIn(state) {
             console.log('Is logged in: ' + state.accessToken + ', ' + state.refreshToken)
             return !!state.accessToken && !!state.refreshToken
         },
-        getUsername: (state) => state.username,
         getRefresh: state => state.refreshToken,
         getAccess: state => state.accessToken,
-        getAlertInfo: state => state.alertInfo
     },
     mutations: {
         auth_success(state, d) {
             console.log('Success\n' + d.accessToken + '\n' + d.refreshToken)
             state.accessToken = d.accessToken
             state.refreshToken = d.refreshToken
-            state.username = d.username
         },
         refresh(state, d) {
             state.accessToken = d.accessToken
@@ -40,17 +31,6 @@ export default new Vuex.Store({
         clear(state) {
             state.accessToken = ''
             state.refreshToken = ''
-            state.username = ''
-        },
-        startAlert(state, d) {
-            state.alertInfo.text = d.message
-            state.alertInfo.variant = d.variant
-            state.alertInfo.visible = true
-        },
-        stopAlert(state) {
-            state.alertInfo.visible = false
-            state.alertInfo.text = ''
-            state.alertInfo.variant = ''
         }
     },
     actions: {
@@ -61,16 +41,14 @@ export default new Vuex.Store({
                     .then(resp => {
                         const accessToken = resp.data.account.token.access_token
                         const refreshToken = resp.data.account.token.refresh_token
-                        const username = resp.data.account.username
 
                         console.log(accessToken)
                         console.log(refreshToken)
-                        console.log(username)
 
-                        helper.saveToStorage(d.remember, accessToken, refreshToken, username)
+                        helper.saveToStorage(d.remember, accessToken, refreshToken)
 
                         Vue.prototype.$http.defaults.headers.common['Authorization'] = "Bearer " + accessToken
-                        commit('auth_success', {accessToken, refreshToken, username})
+                        commit('auth_success', {accessToken, refreshToken})
 
                         resolve(resp)
                     })
@@ -83,15 +61,14 @@ export default new Vuex.Store({
         },
         register({commit}, d) {
             return new Promise((resolve, reject) => {
-                axios({url: 'http://localhost:8000/users/new', data: d.user, method: 'POST'})
+                axios({baseURL: 'http://localhost:8000/api/users/new', data: d.user, method: 'POST'})
                     .then(resp => {
                         const accessToken = resp.data.account.token.access_token
                         const refreshToken = resp.data.account.token.refresh_token
-                        const username = resp.data.account.username
 
-                        helper.saveToStorage(d.remember, accessToken, refreshToken, username)
+                        helper.saveToStorage(d.remember, accessToken, refreshToken)
                         Vue.prototype.$http.defaults.headers.common['Authorization'] = "Bearer " + accessToken
-                        commit('auth_success', {accessToken, refreshToken, username})
+                        commit('auth_success', {accessToken, refreshToken})
 
                         resolve(resp)
                     })
@@ -109,7 +86,7 @@ export default new Vuex.Store({
 
                 instance.defaults.headers.common['Authorization'] = `Bearer ${state.refreshToken}`
 
-                instance({url: `http://localhost:8000/api/users/${state.username}/refresh`, method: "GET"})
+                instance({url: `http://localhost:8000/api/refresh`, method: "GET"})
                     .then(resp => {
                         const accessToken = resp.data.token.access_token
                         const refreshToken = resp.data.token.refresh_token
@@ -125,6 +102,8 @@ export default new Vuex.Store({
                         }
 
                         commit('refresh', {accessToken, refreshToken})
+
+                        Vue.prototype.$http.defaults.headers.common["Authorization"] = `Bearer ${state.accessToken}`
 
                         resolve(resp)
                     })

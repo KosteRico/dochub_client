@@ -1,98 +1,86 @@
 <template>
-    <nav>
-        <div class="container">
-            <div class="nav-container">
-                <div class="logo">
-                    <router-link to="/">
-                        <h3>Logo</h3>
-                    </router-link>
-                </div>
-                <div class="search-box-wrapper flex-align-center">
-                    <input type="search" class="search-box" placeholder="Search...">
-                    <Icon @click="createPost" image-file="plus-solid.svg"/>
-                </div>
-                <div class="login-wrapper flex-align-center">
-                    <Icon image-file="user-solid.svg"/>
-                </div>
-            </div>
-        </div>
-    </nav>
-
+    <b-navbar
+            wrapper-class="container"
+            :key="componentKey"
+            :fixed-top="true"
+            :shadow="true"
+            :close-on-click="false"
+            :spaced="true">
+        <template slot="brand">
+            <b-navbar-item tag="router-link" :to="{ path: '/' }">
+                <img
+                        src="https://raw.githubusercontent.com/buefy/buefy/dev/static/img/buefy-logo.png"
+                        alt="Lightweight UI components for Vue.js based on Bulma"
+                >
+            </b-navbar-item>
+        </template>
+        <template slot="start">
+            <b-navbar-item tag="div">
+                <b-autocomplete placeholder="Search..." icon="magnify" rounded></b-autocomplete>
+            </b-navbar-item>
+            <b-navbar-item tag="div">
+                <b-tooltip class="navbar-fullwidth" label="Добавить файл" type="is-light" position="is-bottom" animated :delay="500">
+                    <b-button
+                            @click="createPost"
+                            tag="a"
+                            class="navbar-fullwidth"
+                            type="is-info"
+                            icon-pack="fas"
+                            icon-left="plus"/>
+                </b-tooltip>
+            </b-navbar-item>
+        </template>
+        <template slot="end">
+            <b-navbar-dropdown :label="$store.getters.getUsername" :hoverable="true" :boxed="true" :collapsible="true">
+                <b-navbar-item class="_with-icon" @click="logout">
+                    <b-icon icon="logout"></b-icon>
+                    <span>Logout</span>
+                </b-navbar-item>
+            </b-navbar-dropdown>
+        </template>
+    </b-navbar>
 </template>
 
 <script>
-    import Icon from "@/components/Icon";
+
+    import {clearStorage} from "@/store/helpers"
+    import AddPost from "@/components/UploadsBar/PostWrapper/AddPost";
 
     export default {
-        name: "TheNavigationBar",
-        components: {Icon},
+        name: "NewNavbar",
+        data() {
+            return {
+                componentKey: 1
+            }
+        },
         methods: {
+            logout() {
+                clearStorage()
+                this.$router.replace('/login')
+            },
             createPost() {
-                console.log('clicked')
-                this.$modal.show('mod1')
+                this.$buefy.modal.open({
+                    parent: this,
+                    component: AddPost,
+                    trapFocus: true,
+                    canCancel: ['x', 'outside']
+                })
             }
         }
     }
 </script>
 
 <style lang="sass" scoped>
-@import "../assets/sass/variables"
+@import "~bulma/sass/utilities/mixins.sass"
 
-.logo
-    width: $side-width
-    position: relative
+.icon._bookmark
+    margin-left: -0.25em
 
-    a
-        color: inherit
+.navbar-item._with-icon > .icon
+    margin-right: 0.1875em
 
-    h3
-        margin: 0
-        position: absolute
-        width: fit-content
-        cursor: pointer
-        left: 0
-        bottom: 0
-
-
-nav
-    /*border-bottom: 1px solid #6796cd*/
-    position: fixed
-    top: 0
-    height: 48px
-    color: red
-    width: 100%
-    background-color: #77baf8
-    box-shadow: 0 .3px 4px 0 rgba(119, 186, 248, 1)
-
-    .nav-container
-        height: inherit
-        display: flex
-        justify-content: flex-start
-        flex-direction: row
-
-    .container
-        height: inherit
-
-    .nav-link
-        cursor: pointer
-
-    .search-box
-        width: 290px
-        max-height: 29px
-        margin-left: 0 !important
-
-    .login-wrapper
-        padding-left: 8px
-
-    .icon
-        cursor: pointer
-
-    .search-box-wrapper
-        display: flex
-        flex-grow: 1
-        margin-left: 1em
-
-        *
-            margin-left: 25px
+.navbar-fullwidth
+    @include touch
+        width: 100%
 
 </style>

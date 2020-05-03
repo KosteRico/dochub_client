@@ -1,18 +1,27 @@
 <template>
-    <div class="page-box primary top-box tag-title-box">
-        <div class="top-wrapper">
-            <div class="title">{{name}}</div>
-            <div class="under-title">1 млн. подписчиков</div>
+    <div class="box has-background-white-bis">
+        <div class="media">
+            <div class="media-content">
+                <h3 class="title is-3">{{name}}</h3>
+                <h6 class="subtitle is-6">1 млн. подписчиков</h6>
+            </div>
+            <div class="media-right">
+                <b-button
+                        :type="getType"
+                        @click="$emit('click-follow')"
+                        rounded
+                >
+                    {{followedMessage}}
+                </b-button>
+            </div>
         </div>
-        <div class="bottom-wrapper">
-            <button
-                    @click="$emit('click-follow')"
-                    type="button"
-                    :class="{followed: isFollowed}">
-                {{followedMessage}}
-            </button>
+        <div class="content">
+            Lorem ipsum do lor sit amet, consectetur adipisicing elit. Ab aliquam aspernatur esse eum facilis ipsum
+            itaque molestiae, natus nemo nesciunt numquam possimus praesentium quo quod recusandae reiciendis
+            reprehenderit, similique sint.
         </div>
     </div>
+
 </template>
 
 <script>
@@ -22,7 +31,9 @@
             followedMessage() {
                 return (this.isFollowed) ? 'вы подписаны' : 'подписаться'
             },
-
+            getType() {
+                return (this.isFollowed) ? 'is-light' : 'is-follow'
+            }
         },
         props: {
             isFollowed: {
@@ -38,37 +49,9 @@
 </script>
 
 <style lang="sass" scoped>
-.top-box
+.box
     border-radius: 0
-    font-size: 1.1em
-    padding: 5px 1em
-    display: flex
-
-    .top-wrapper
-        flex-grow: 2
-
-    .bottom-wrapper
-        width: fit-content
-        flex-grow: 1
-        display: flex
-        justify-content: flex-end
-        align-items: center
-
-    button
-        font-weight: normal
-        padding: 0 15px
-        font-size: 1em
-        background-color: #db0000
-        border: 1px solid #b90000
-        color: white
-        border-radius: 8px
-        outline: none
-        /*height: fit-content*/
-
-        &.followed
-            font-size: calc(100% - 6px)
-            color: black
-            background-color: #E5E5E5
-            border: 1px solid #dddddd
+.media
+    margin-bottom: 1em
 
 </style>

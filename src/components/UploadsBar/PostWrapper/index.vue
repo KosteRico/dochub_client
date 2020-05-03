@@ -1,31 +1,31 @@
 <template>
     <div>
-        <div class="post-wrapper">
-            <Post v-for="p in posts"
-                  :key="p.id"
+        <div v-if="posts && posts.length > 0">
+            <Post v-for="(p, i) in posts"
+                  :key="i"
                   :id="p.id"
                   :title="p.title"
+                  :initial-is-bookmarked="p.is_bookmarked"
+                  :initial-bookmark-count="p.bookmark_count"
                   :description="p.description"
-                  :like-count="p.like_count"
-                  :bookmark-count="p.bookmark_count"
                   :tag-names="p.tag_names"
                   :date="p.date_created"
             />
+        </div>
+        <div v-else>
+            <div class="content">
+                <h4 class="title is-4 is-5-mobile">Документы отсутствуют</h4>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
     import Post from "./Post"
-    // import axios from 'axios'
 
     export default {
         components: {Post},
-        data() {
-            return {
-                count: 20,
-            }
-        }, props: {
+        props: {
             posts: {
                 type: Array,
                 required: true

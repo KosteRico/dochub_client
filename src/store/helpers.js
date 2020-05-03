@@ -1,4 +1,4 @@
-export function saveToStorage(remember, accessToken, refreshToken, username) {
+export function saveToStorage(remember, accessToken, refreshToken) {
     let storage
     if (remember) {
         storage = localStorage
@@ -8,7 +8,6 @@ export function saveToStorage(remember, accessToken, refreshToken, username) {
 
     storage.setItem('accessToken', accessToken)
     storage.setItem('refreshToken', refreshToken)
-    storage.setItem('username', username)
 }
 
 export function clearStorage() {
@@ -23,13 +22,11 @@ export function clearStorage() {
 export function isLocalStorage() {
     return !!localStorage.getItem('accessToken')
         && !!localStorage.getItem('refreshToken')
-        && !!localStorage.getItem('username')
 }
 
 export function isSessionStorage() {
     return !!sessionStorage.getItem('accessToken')
         && !!sessionStorage.getItem('refreshToken')
-        && !!sessionStorage.getItem('username')
 }
 
 export function updateSessionStorage(accessToken, refreshToken) {

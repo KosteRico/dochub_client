@@ -7,23 +7,30 @@ import TagUploadsBar from "@/pages/AuthorizedPage/TagUploadsBar";
 import Search from "@/pages/AuthorizedPage/Search";
 import SigninPage from "@/pages/SigninPage";
 import RegisterPage from "@/pages/RegisterPage";
+import BookmarkUploadsBar from "@/pages/AuthorizedPage/BookmarkUploadsBar";
 
 Vue.use(VueRouter);
 
 let router = new VueRouter({
     mode: 'history',
     routes: [
+        {path: "/", redirect: "/home"},
         {
             path: "/",
             component: Home,
             children: [
                 {
-                    path: "",
+                    path: "home",
                     component: HomeUploadsBar
                 },
                 {
                     path: "tags/:id",
-                    component: TagUploadsBar
+                    component: TagUploadsBar,
+                    props: true
+                },
+                {
+                    path: "bookmarks",
+                    component: BookmarkUploadsBar
                 }
             ],
             meta: {

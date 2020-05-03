@@ -1,30 +1,27 @@
 <template>
-    <div class="uploads middle-width">
-<!--        <UploadsTitle title="Welcome"/>-->
+    <div class="_loading">
         <PostWrapper :posts="posts"/>
+        <b-loading :active.sync="loading" :can-cancel="false" :is-full-page="false"/>
     </div>
 </template>
 
 <script>
-    import PostWrapper from "@/components/UploadsBar/PostWrapper"
-    // import UploadsTitle from "@/components/UploadsBar/UploadsTitle";
+    import PostWrapper from "@/components/UploadsBar/PostWrapper";
+    import loading from "@/mixins/loading";
 
     export default {
         name: "HomeUploadsBar",
-        components: {
-            // UploadsTitle,
-            PostWrapper
-        },
+        components: {PostWrapper},
         data() {
             return {
                 posts: []
             }
         },
-        methods: {},
+        mixins: [loading],
         mounted() {
             console.log("HomeUploadsBar was mounted")
 
-            this.$http({url: `/users/${this.$store.getters.getUsername}/subscriptions/posts`})
+            this.$http({url: `/subscriptions`})
                 .then(resp => {
                     const posts_ = resp.data.posts
 
@@ -34,6 +31,7 @@
 
                     for (let i = 0; i < posts_.length; i++) {
                         this.posts.push(posts_[i])
+                        console.log(posts_[i].is_bookmarked)
                     }
                 })
 

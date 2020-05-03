@@ -1,33 +1,40 @@
 <template>
     <div>
-        <NewNavbar/>
-        <div class="main container">
-            <div class="content">
-                <div class="sidebar-wrapper">
-                    <div class="sidebar">
-                        <TagSidebar @click-tag="handleTagClick"/>
-                    </div>
+        <TheNavigationBar/>
+        <div class="container">
+            <div class="columns">
+                <div class="column is-full-mobile is-one-quarter-tablet is-2-desktop" v-if="!isTablet">
+                    <TagSidebar :key="sidebarTagKey"/>
                 </div>
-                <router-view :key="this.$route.fullPath"/>
+                <div class="column is-two-fifths-widescreen is-three-fifths">
+                    <router-view
+                            @update-tags="sidebarTagKey++"
+                            :key="this.$route.fullPath"/>
+                </div>
             </div>
         </div>
+        <footer class="footer"></footer>
     </div>
 </template>
 
 <script>
-    // import TheNavigationBar from "@/components/TheNavigationBar";
+    import TheNavigationBar from "@/components/TheNavigationBar";
     import TagSidebar from "@/components/SidebarWrapper/TagSidebar";
-    import {v4 as uuid} from 'uuid'
-    import NewNavbar from "@/components/NewNavbar";
 
     export default {
-        components: {NewNavbar, TagSidebar},
+        components: {TagSidebar, TheNavigationBar},
+        metaInfo: {
+            title: "Home",
+            titleTemplate: "%s | Dochub"
+        },
         created() {
-            this.uploadBarId = uuid()
+            console.log(screen.width)
+            this.isTablet = screen.width <= 768
         },
         data() {
             return {
-                uploadBarId: null
+                sidebarTagKey: 1,
+                isTablet: false,
             }
         },
         methods: {
@@ -39,17 +46,11 @@
 </script>
 
 <style lang="sass" scoped>
-    @import "../../assets/sass/variables"
 
-    .sidebar-wrapper
-        font-size: 1.1em
-        width: $side-width
-        margin-right: 1em
-        border: none
-        // display: inline-box
+.columns
+    margin: 0
 
-        .sidebar
-            position: fixed
-            width: inherit
-            padding-right: 2em
+.container
+    margin-top: 20px
+
 </style>

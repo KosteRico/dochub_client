@@ -1,13 +1,28 @@
 <template>
-    <div class="sidebar-item">
-        <Tag
-                v-for="tag in tags"
-                :key="tag.id"
-                :p-key="tag.id"
-                :text="tag.name"
-                @click-tag="clickTag"
-        />
-    </div>
+    <b-menu class="">
+        <b-menu-list label="Навигация">
+            <b-menu-item
+                    active-class="is-active"
+                    to="/home"
+                    tag="router-link"
+                    icon="home"
+                    label="Домой"></b-menu-item>
+            <b-menu-item
+                    active-class="is-active"
+                    to="/bookmarks"
+                    tag="router-link"
+                    icon="bookmark"
+                    label="Закладки"></b-menu-item>
+        </b-menu-list>
+        <b-menu-list label="Подписки">
+            <Tag v-for="tag in tags"
+                 :key="tag.id"
+                 :p-key="tag.id"
+                 :text="tag.name"
+                 @click-tag="clickTag"
+            />
+        </b-menu-list>
+    </b-menu>
 </template>
 
 <script>
@@ -27,7 +42,7 @@
             }
         },
         created() {
-            this.$http({url: `/users/${this.$store.getters.getUsername}/subscriptions/tags`, method: "GET"})
+            this.$http({url: `/subscriptions/tags`, method: "GET"})
                 .then(resp => {
                     const tags_ = resp.data.tags
                     console.log(resp.data.tags)
@@ -48,6 +63,9 @@
 </script>
 
 <style lang="sass" scoped>
-    .sidebar-item
-        padding-top: 27px
+.menu-list
+    margin-left: 0
+.menu
+    margin-right: 25px
+
 </style>

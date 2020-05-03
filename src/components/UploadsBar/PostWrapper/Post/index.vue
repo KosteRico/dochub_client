@@ -1,104 +1,100 @@
 <template>
-    <div class="page-box feed">
-        <div class="top-wrapper">
-            <div class="top-wrapper-inner">
-                <div class="title">
-                    <span class="title-inner">{{title}}</span><span
-                        class="doc-format user-select-none">.pdf</span>
+    <div class="box">
+        <div class="content">
+            <div class="media">
+                <div class="media-left">
+                    <h4 class="title is-4 is-size-5-mobile is-capitalized"><a @click="open">{{title}}</a></h4>
+                    <p class="subtitle _custom-size is-size-7-mobile">
+                        <Date :date-str="date"/>
+                    </p>
                 </div>
-                <Date :date-str="date"/>
-                <PostDescription :text="description"/>
+                <div class="media-content"></div>
+                <div class="media-right">
+                    <b-button
+                            tag="a"
+                            :class="isBookmarked ? 'has-text-primary' : ''"
+                            type="is-text"
+                            icon-right="bookmark"
+                            @click="bookmarkPost"
+                    >{{bookmarkCount}}
+                    </b-button>
+                    <b-button
+                            type="is-text"
+                            tag="a"
+                            icon-right="dots-vertical"
+                    ></b-button>
+                </div>
             </div>
-            <DownloadDoc/>
         </div>
-        <div class="tag-wrapper">
-            <b-tag v-for="t in tagNames" :key="t">{{t}}</b-tag>
+        <div class="content _description">
+            <PostDescription :text="description"/>
         </div>
-        <div class="feed-wrapper">
-            <div class="tools-bar user-select-none top-line">
-                <UpvoteReaction :counter="likeCount"/>
-                <BookmarkReaction :counter="bookmarkCount"/>
-            </div>
-        </div>
+        <b-taglist>
+            <router-link :to="`/tags/${i}`" class="tag is-light" v-for="i in tagNames" :key="i">{{i}}</router-link>
+        </b-taglist>
     </div>
 </template>
 
 <script>
-    import UpvoteReaction from "@/components/UploadsBar/PostWrapper/Post/Reaction/UpvoteReaction";
-    import BookmarkReaction from "@/components/UploadsBar/PostWrapper/Post/Reaction/BookmarkReaction";
-    import PostDescription from "@/components/UploadsBar/PostWrapper/Post/PostDescription";
-    import DownloadDoc from "@/components/UploadsBar/PostWrapper/Post/DownloadDoc";
     import Date from "@/components/UploadsBar/PostWrapper/Post/Date";
+    import PostDescription from "@/components/UploadsBar/PostWrapper/Post/PostDescription";
+    import PostModal from "@/components/PostModal";
+    import bookmark from "@/mixins/posts/bookmark";
 
     export default {
-        components: {Date, DownloadDoc, PostDescription, BookmarkReaction, UpvoteReaction},
+        components: {PostDescription, Date},
+        mixins: [bookmark],
         props: [
             'id',
             'title',
             'date',
             'description',
-            'likeCount',
-            'bookmarkCount',
-            'tagNames'
-        ]
+            'initialBookmarkCount',
+            'tagNames',
+            'initialIsBookmarked',
+            'type'
+        ],
+        created() {
+            this.bookmarkCount = this.initialBookmarkCount
+            this.isBookmarked = this.initialIsBookmarked
+        },
+        methods: {
+            open() {
+                let props = {
+                    id: this.id
+                };
+                this.$buefy.modal.open({
+                    props,
+                    parent: this,
+                    component: PostModal,
+                    trapFocus: true,
+                    canCancel: ['x', 'outside']
+                });
+            }
+        }
     }
 </script>
 
 <style lang="sass" scoped>
-.feed
-    margin-bottom: 1.4em
-    width: 100%
-    padding: 1em
+@import "~bulma/sass/utilities/mixins"
 
-    .tag-wrapper
-        justify-content: flex-start
-        margin-bottom: -12px
-        font-size: .88em
-        display: flex
-        flex-direction: row
-        flex-wrap: wrap
+.subtitle._custom-size
+    font-size: 0.85rem
 
-    .doc-format
-        margin-left: 10px
-        font-size: .8em
-        font-weight: normal
-        padding: 2px 6px
-        border-radius: 15px
-        background: rgba(230, 230, 230, .8)
+._description
+    word-break: break-all
+    word-break: break-word
 
-    .top-wrapper
-        display: flex
-        justify-content: space-between
+._description._custom-size
+    @include mobile
+        font-size: 0.9em
 
+.title a
+    color: inherit
 
-    .feed-wrapper
-        margin-top: 10px
-        display: flex
-        flex-direction: row
-        justify-content: space-between
+    &:hover
+        text-decoration: underline
 
-        .author
-            font-size: .95em
-
-            .name
-                cursor: pointer
-
-    .reaction
-        cursor: pointer
-        color: inherit
-        display: flex
-        flex-direction: row
-
-        .counter
-            margin-left: 8px
-            align-self: center
-
-    .tools-bar
-        padding-top: 5px
-        width: 100%
-        display: flex
-        flex-direction: row
-        margin-right: 0
-        justify-content: space-between
-
+.box
+    border-radius: 15px
 </style>

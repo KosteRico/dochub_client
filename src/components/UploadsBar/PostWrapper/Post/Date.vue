@@ -1,5 +1,5 @@
 <template>
-    <div class="under-title">Добавлено {{formatDate}}</div>
+    <span>Добавлено {{formatDate}}</span>
 </template>
 
 <script>
@@ -10,8 +10,17 @@
         ],
         data() {
             return {
-                date: new Date(this.dateStr)
+                date: null
             }
+        },
+        created() {
+            let now = new Date(Date.now())
+
+            const diff = now.getTimezoneOffset()
+
+            let dateTemp = new Date(this.dateStr)
+
+            this.date = new Date(dateTemp.getTime() - diff * 60000)
         },
         methods: {
             parseMonth(m) {
@@ -58,19 +67,25 @@
             formatDate() {
                 const now = new Date(Date.now());
 
-                if (this.date.getDate() === now.getDate()
-                    && this.date.getMonth() === now.getMonth()
-                    && this.date.getFullYear() === now.getFullYear()) {
-                    return `в ${this.formatTime()}`
+                let dd = this.date.getDate();
+                let mm = this.date.getMonth();
+                let yy = this.date.getFullYear()
+
+                if (mm === now.getMonth()
+                    && yy === now.getFullYear()) {
+                    if (dd === now.getDate()) {
+                        return `в ${this.formatTime()}`
+                    } else if (now.getDate() - dd === 1) {
+                        return `вчера в ${this.formatTime()}`
+                    } else if (now.getDate() - dd === 2) {
+                        return `позавчера в ${this.formatTime()}`
+                    }
                 }
 
-                var dd = this.date.getDate();
                 if (dd < 10) dd = '0' + dd;
 
-                let mm = this.date.getMonth() + 1;
+                mm += 1
                 mm = ' ' + this.parseMonth(mm)
-
-                let yy = this.date.getFullYear();
 
                 if (yy === now.getFullYear()) {
                     yy = ''
@@ -87,6 +102,6 @@
 <style lang="sass" scoped>
 .date
     font-size: .77em
-    color: rgba(34, 34, 34, .7)
+    color: rgba(34, 34, 34, 0.7)
     margin-top: -7px
 </style>

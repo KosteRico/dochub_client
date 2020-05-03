@@ -1,30 +1,36 @@
 <template>
     <div class="container">
-        <form class="auth page-box" @submit.prevent="login">
-            <b-field label="Username">
-                <b-input v-model="username"></b-input>
-            </b-field>
+        <div class="columns is-centered">
+            <div class="column is-one-quarter">
+                <div class="box">
+                    <form @submit.prevent="login">
+                        <b-field label="Username">
+                            <b-input v-model="username"></b-input>
+                        </b-field>
 
-            <b-field label="Password">
-                <b-input type="password"
-                         v-model="password"
-                         password-reveal
-                ></b-input>
-            </b-field>
+                        <b-field label="Password">
+                            <b-input type="password"
+                                     v-model="password"
+                                     password-reveal
+                            ></b-input>
+                        </b-field>
 
-            <b-field>
-                <b-checkbox v-model="remember">Remember me</b-checkbox>
-            </b-field>
+                        <b-field>
+                            <b-checkbox v-model="remember">Remember me</b-checkbox>
+                        </b-field>
 
-            <b-field>
-                <b-button tag="button" native-type="submit" type="is-primary">Log in</b-button>
-            </b-field>
+                        <b-field>
+                            <b-button tag="button" native-type="submit" type="is-primary">Log in</b-button>
+                        </b-field>
 
-            <b-field label="Don't have an account yet?">
-                <router-link to="/register" class="create-account">Create an account</router-link>
-            </b-field>
+                        <b-field label="Don't have an account yet?">
+                            <router-link to="/register">Create an account</router-link>
+                        </b-field>
 
-        </form>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -57,30 +63,14 @@
                         console.log('Ready to \'/\'')
                         this.$router.push('/')
                     })
-                    .catch(err => console.log(err))
+                    .catch(err => {
+                        console.log(err)
+                    })
             }
         }
     }
 </script>
 
 <style lang="sass" scoped>
-.auth
-    width: fit-content
-    margin: 0 auto
-    background-color: white
-    padding: 10px 20px
-
-.container
-    display: flex
-    justify-content: center
-    align-items: center
-    height: 100vh
-
-.create-account
-    display: block
-
-
-label
-    display: block
 
 </style>

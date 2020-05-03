@@ -1,13 +1,15 @@
 <template>
-    <div class="uploads middle-width">
+    <div class="_loading">
         <SubscribeBox @click-follow="clickFollow" :is-followed="isFollowed" :name="tagName"/>
         <PostWrapper :posts="posts"/>
+        <b-loading :active.sync="loading" :can-cancel="false" :is-full-page="false"/>
     </div>
 </template>
 
 <script>
-    import PostWrapper from "@/components/UploadsBar/PostWrapper";
+    import PostWrapper from "@/components/UploadsBar/PostWrapper"
     import SubscribeBox from "@/components/UploadsBar/SubscribeBox";
+    import loading from "@/mixins/loading";
 
     export default {
         name: "TagUploadsBar",
@@ -20,38 +22,42 @@
                 componentKey: this.$uuid(),
                 isFollowed: false,
                 posts: [],
-                tagName: this.$route.params.id
+                tagName: ""
             }
         },
+        props: ['id'],
+        metaInfo() {
+            return {
+                title: this.id,
+            }
+        },
+        mixins: [loading],
+
         methods: {
             forceRender() {
                 this.componentKey = this.$uuid()
             },
             clickFollow() {
                 this.$http({
-                    url: `/users/${this.$store.getters.getUsername}/subscriptions/tags`, params: {
-                        name: this.tagName,
+                    url: `/subscriptions/tags`, params: {
+                        name: this.id,
                         status: !this.isFollowed
                     }, method: "POST"
                 }).then((resp) => {
-                    this.isFollowed = !this.isFollowed
-                    this.$store.commit("startAlert", {
+                    this.$toast({
                         message: resp.data.message,
-                        variant: "success"
                     })
+                    this.isFollowed = !this.isFollowed
+                    this.$emit('update-tags')
                 }).catch(err => {
-                    this.$store.commit("startAlert", {
+                    this.$toast({
                         message: err.response.data.message,
-                        variant: "danger"
+                        type: "is-danger"
                     })
                 })
             },
             loadData() {
-                this.$http({
-                    url: `/users/${this.$store.getters.getUsername}/tags`,
-                    params: {name: this.tagName},
-                    method: "GET"
-                })
+                this.$http.get(`/tags?name=${this.id}`)
                     .then(resp => {
                         this.tagName = resp.data.tag.name
                         const _posts = resp.data.tag.posts
@@ -59,6 +65,7 @@
 
                         for (let i = 0; i < _posts.length; i++) {
                             this.posts.push(_posts[i])
+                            console.log('Is bookmarked? ' + _posts[i].is_bookmarked)
                         }
                     })
             }
@@ -67,15 +74,12 @@
             console.log("created")
             this.loadData()
         },
-        updated() {
-            console.log("updated")
-        },
         destroyed() {
             console.log("destroyed")
         }
     }
 </script>
 
-<style scoped>
+<style lang="sass" scoped>
 
 </style>
