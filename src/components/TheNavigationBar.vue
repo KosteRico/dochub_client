@@ -16,10 +16,13 @@
         </template>
         <template slot="start">
             <b-navbar-item tag="div">
-                <b-autocomplete placeholder="Search..." icon="magnify" rounded></b-autocomplete>
+                <b-autocomplete v-model="searchQuery" @keyup.enter.native="search" placeholder="Search..."
+                                icon="magnify"
+                                rounded></b-autocomplete>
             </b-navbar-item>
             <b-navbar-item tag="div">
-                <b-tooltip class="navbar-fullwidth" label="Добавить файл" type="is-light" position="is-bottom" animated :delay="500">
+                <b-tooltip class="navbar-fullwidth" label="Добавить файл" type="is-light" position="is-bottom" animated
+                           :delay="500">
                     <b-button
                             @click="createPost"
                             tag="a"
@@ -42,7 +45,6 @@
 </template>
 
 <script>
-
     import {clearStorage} from "@/store/helpers"
     import AddPost from "@/components/UploadsBar/PostWrapper/AddPost";
 
@@ -50,7 +52,8 @@
         name: "NewNavbar",
         data() {
             return {
-                componentKey: 1
+                componentKey: 1,
+                searchQuery: ''
             }
         },
         methods: {
@@ -65,6 +68,16 @@
                     trapFocus: true,
                     canCancel: ['x', 'outside']
                 })
+            },
+            search() {
+                // console.log(this.searchQuery)
+
+                let tempQ = this.searchQuery.replace(/[.,/#!$%^&*;:{}=\-_`~()]/g,"")
+
+                if (tempQ.trim() === "") {
+                    return
+                }
+                this.$router.push({name: 'search', query: {q: this.searchQuery}})
             }
         }
     }

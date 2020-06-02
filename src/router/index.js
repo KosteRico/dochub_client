@@ -8,6 +8,9 @@ import Search from "@/pages/AuthorizedPage/Search";
 import SigninPage from "@/pages/SigninPage";
 import RegisterPage from "@/pages/RegisterPage";
 import BookmarkUploadsBar from "@/pages/AuthorizedPage/BookmarkUploadsBar";
+import PostPage from "@/pages/AuthorizedPage/PostPage";
+import TagSidebar from "@/components/SidebarWrapper/TagSidebar";
+import FilterSidebar from "@/components/SidebarWrapper/FilterSidebar"
 
 Vue.use(VueRouter);
 
@@ -21,25 +24,46 @@ let router = new VueRouter({
             children: [
                 {
                     path: "home",
-                    component: HomeUploadsBar
+                    components: {
+                        default: HomeUploadsBar,
+                        sidebar: TagSidebar
+                    },
                 },
                 {
                     path: "tags/:id",
-                    component: TagUploadsBar,
-                    props: true
+                    components: {
+                        default: TagUploadsBar,
+                        sidebar: TagSidebar,
+                    },
                 },
                 {
                     path: "bookmarks",
-                    component: BookmarkUploadsBar
+                    components: {
+                        default: BookmarkUploadsBar,
+                        sidebar: TagSidebar
+                    },
+                },
+                {
+                    path: "d/:id",
+                    components: {
+                        default: PostPage,
+                        sidebar: TagSidebar,
+                    },
+                    props: true
+                },
+                {
+                    path: "search",
+                    components: {
+                        default: Search,
+                        sidebar: FilterSidebar,
+                    },
+                    name: 'search',
+                    props: (route) => (
+                        {q: route.query.q}
+                    ),
+
                 }
             ],
-            meta: {
-                requiresAuth: true
-            }
-        },
-        {
-            path: "/search",
-            component: Search,
             meta: {
                 requiresAuth: true
             }

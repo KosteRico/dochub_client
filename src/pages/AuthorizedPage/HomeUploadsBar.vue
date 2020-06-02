@@ -31,7 +31,7 @@
 
                     for (let i = 0; i < posts_.length; i++) {
                         this.posts.push(posts_[i])
-                        console.log(posts_[i].is_bookmarked)
+                        // console.log(posts_[i].is_bookmarked)
                     }
                 })
 

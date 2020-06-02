@@ -25,14 +25,12 @@
                 tagName: ""
             }
         },
-        props: ['id'],
         metaInfo() {
             return {
-                title: this.id,
+                title: this.tagName,
             }
         },
         mixins: [loading],
-
         methods: {
             forceRender() {
                 this.componentKey = this.$uuid()
@@ -40,7 +38,7 @@
             clickFollow() {
                 this.$http({
                     url: `/subscriptions/tags`, params: {
-                        name: this.id,
+                        name: this.tagName,
                         status: !this.isFollowed
                     }, method: "POST"
                 }).then((resp) => {
@@ -57,7 +55,7 @@
                 })
             },
             loadData() {
-                this.$http.get(`/tags?name=${this.id}`)
+                this.$http.get(`/tags?name=${this.$route.params.id}`)
                     .then(resp => {
                         this.tagName = resp.data.tag.name
                         const _posts = resp.data.tag.posts

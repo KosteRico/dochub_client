@@ -1,5 +1,5 @@
 <template>
-    <b-menu class="">
+    <b-menu>
         <b-menu-list label="Навигация">
             <b-menu-item
                     active-class="is-active"
@@ -40,7 +40,7 @@
             clickTag(id) {
                 this.$emit('click-tag', id)
             }
-        },
+            },
         created() {
             this.$http({url: `/subscriptions/tags`, method: "GET"})
                 .then(resp => {
@@ -54,7 +54,6 @@
                             name: tags_[i]
                         })
                     }
-
                 }).catch(err => {
                 console.log(`Subscribed tags init error: ${err}`)
             })

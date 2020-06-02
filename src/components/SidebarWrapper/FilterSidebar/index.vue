@@ -1,72 +1,69 @@
 <template>
-    <div class="sidebar-item">
-        <div class="title bottom-line">Тег</div>
-        <div class="sidebar-item-content">
-            <Tag text="Все"/>
-            <Tag text="Ваши подписки"/>
-            <ChosenTagWrapper/>
-            <input type="search" class="search-box content-item" placeholder="Найти тег">
-        </div>
-    </div>
-
+    <b-menu>
+        <b-menu-list label="Теги">
+            <li>
+                <b-autocomplete
+                        :data="filtered"
+                        @input="searchTags"
+                        @select="addTag"
+                        placeholder="Тег"
+                        v-model="tagsInput">
+                    <template slot-scope="props">
+                        <span>{{props.option.name}} ({{props.option.subscribers_count}} подписчиков)</span>
+                    </template>
+                    <template slot="empty">
+                        Не найдено
+                    </template>
+                </b-autocomplete>
+            </li>
+            <li class="_tags" v-if="tags && tags.length > 0">
+                <b-taglist>
+                    <b-tag v-for="(t, i) in tags" @close="removeTag(i)" type="is-primary" :key="i" closable attached>{{t.name}}</b-tag>
+                </b-taglist>
+            </li>
+        </b-menu-list>
+    </b-menu>
 </template>
 
 <script>
-    import ChosenTagWrapper from "@/components/SidebarWrapper/FilterSidebar/ChosenTagWrapper/index"
-    import Tag from "@/components/SidebarWrapper/Tag";
+
+    import searchTags from "@/mixins/searchTags";
 
     export default {
-        components: {Tag, ChosenTagWrapper}
+        components: {},
+        mixins: [searchTags],
+        data() {
+            return {
+                tagsInput: ""
+            }
+        },
+        methods: {
+            removeTag(index) {
+                this.tags = this.tags.filter(function (value, i) {
+                    return i !== index;
+                })
+            },
+            addTag(tag) {
+                const found = this.tags.findIndex((el) => {
+                    return el.name === tag.name
+                })
+
+                if (found < 0) {
+                    this.tags.push(tag)
+                }
+            }
+        }
     }
 </script>
 
 <style lang="sass" scoped>
+._tags
+    margin-top: 1rem
 
-    @import "../../../assets/sass/variables"
+.menu-list
+    margin-left: 0
 
-    .link
-        display: block
-        padding: .4em 0
-        text-decoration: none
-        color: #4e4e4e
-        width: inherit
-
-    .caret
-        float: right
-        margin-top: 5px
-
-    .sidebar-item
-        width: 100%
-        padding-right: 1em
-
-    .sidebar-item
-
-        .title
-            font-size: inherit
-            padding: 0
-
-            color: #222
-            width: inherit
-            margin-bottom: 10px
-
-
-        .sidebar-item-content
-            margin-top: .4em
-            font-size: .85em
-
-
-            input.content-item
-                max-height: 29px
-
-            a.content-item
-                cursor: pointer
-                display: block
-                color: inherit
-                border-radius: 5px
-
-        &.disabled
-            opacity: .6
-            cursor: not-allowed
-
+.menu
+    margin-right: 25px
 
 </style>

@@ -1,7 +1,7 @@
 <template>
     <div class="box _loading">
-        <section >
-            <form @submit.prevent="submit">
+        <section>
+            <form @submit.prevent="createPost">
                 <b-field
                         label="Название"
                         horizontal
@@ -65,6 +65,9 @@
 </template>
 
 <script>
+    import closeModal from "@/mixins/closeModal";
+    import searchTags from "@/mixins/searchTags";
+
     export default {
         name: "AddPost",
         data() {
@@ -73,26 +76,14 @@
                 description: "",
                 file: null,
                 fileLoading: false,
-                tags: [],
-                filtered: []
             }
         },
-        watch: {},
+        mixins: [closeModal, searchTags],
         methods: {
-            submit() {
-                if (this.title.length === 0
-                    || this.description.length === 0
-                    || this.file === null
-                    || this.tags.length === 0) {
-                    return
-                }
+            loadFile(uuid) {
 
                 let formData = new FormData()
                 formData.append('file', this.file)
-
-                let uuid = this.$uuid()
-
-                this.fileLoading = true
 
                 this.$http.post(`/posts/${uuid}/file`, formData, {
                     headers: {
@@ -100,16 +91,31 @@
                     }
                 }).then(resp => {
                     console.log(resp.data.message)
-
-                    this.createPost(uuid)
+                    this.close()
+                }).catch(err => {
+                    this.loading = false
+                    this.$toast({
+                        message: err.response.data.message,
+                        type: 'is-danger'
+                    })
                 })
             },
-            createPost(uuid) {
+            createPost() {
+                if (this.title.length === 0
+                    || this.description.length === 0
+                    || this.file === null
+                    || this.tags.length === 0) {
+                    return
+                }
+
+                this.fileLoading = true
+
+                let uuid = this.$uuid()
 
                 let _tagNames = []
-
                 for (let i = 0; i < this.tags.length; i++) {
                     _tagNames.push(this.tags[i].name)
+
                 }
 
                 let data = {
@@ -121,9 +127,14 @@
 
                 this.$http.post(`/posts/${uuid}`, data)
                     .then(() => {
+                        this.loadFile(uuid)
+                    })
+                    .catch(err => {
                         this.fileLoading = false
-                        console.log(`File and post with uuid "${uuid}" was successfully created`)
-                        this.close()
+                        this.$toast({
+                            message: err.response.data.message,
+                            type: 'is-danger'
+                        })
                     })
 
             },
@@ -134,21 +145,6 @@
                     }
                 }
                 return true
-            },
-            searchTags(query) {
-                if (query === null || query.length === 0) {
-                    this.filtered = []
-                    return
-                }
-
-                this.$http({url: `/tags/search?q=${query}`})
-                    .then(resp => {
-                        this.filtered = resp.data.tags || []
-                        console.log('Retrieved data: ' + resp.data.tags)
-                    }).catch()
-            },
-            close() {
-                this.$emit('close')
             }
         }
     }

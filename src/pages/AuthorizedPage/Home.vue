@@ -4,7 +4,7 @@
         <div class="container">
             <div class="columns">
                 <div class="column is-full-mobile is-one-quarter-tablet is-2-desktop" v-if="!isTablet">
-                    <TagSidebar :key="sidebarTagKey"/>
+                    <router-view name="sidebar" :key="sidebarTagKey"/>
                 </div>
                 <div class="column is-two-fifths-widescreen is-three-fifths">
                     <router-view
@@ -19,10 +19,9 @@
 
 <script>
     import TheNavigationBar from "@/components/TheNavigationBar";
-    import TagSidebar from "@/components/SidebarWrapper/TagSidebar";
 
     export default {
-        components: {TagSidebar, TheNavigationBar},
+        components: {TheNavigationBar},
         metaInfo: {
             title: "Home",
             titleTemplate: "%s | Dochub"

@@ -17,11 +17,14 @@
                 maxLength: 60
             }
         },
-        props: [
-            'text'
-        ],
-        mounted() {
-            console.log(this.text.length)
+        props:{
+            text: {
+                type: String,
+                required: true
+            }
+        },
+        created() {
+            console.log(this.text)
             const wordsCount = this.text.split(' ').length
 
             this.isShort = this.text.length < this.maxLength || wordsCount < this.maxWordLength
